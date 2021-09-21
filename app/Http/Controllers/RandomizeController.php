@@ -34,8 +34,8 @@ class RandomizeController extends Controller
             15 => 'MRK',
         ];
 
-        $s1 = $blueChips[rand(0, sizeof($blueChips))];
-        $s2 = $blueChips[rand(0, sizeof($blueChips))];
+        $s1 = $blueChips[rand(1, sizeof($blueChips))];
+        $s2 = $blueChips[rand(1, sizeof($blueChips))];
 
         $trash = DudPair::pluck('symbol')->all();
 

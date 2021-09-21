@@ -61,6 +61,18 @@
             :s="value"
             :t="marketType"
         ></pair>
+        <br>
+        <div class="container">
+            <controls
+                :symbol1="v1.toUpperCase()"
+                :symbol2="v2.toUpperCase()"
+                :cr="cr"
+                :br="br"
+                :pr="pr"
+                :tr="tr"
+            >
+            </controls>
+        </div>
     </div>
 </template>
 
