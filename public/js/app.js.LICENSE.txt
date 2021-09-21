@@ -5,13 +5,6 @@
   */
 
 /*!
- * Chart.js v2.9.4
- * https://www.chartjs.org
- * (c) 2020 Chart.js Contributors
- * Released under the MIT License
- */
-
-/*!
  * Sizzle CSS Selector Engine v2.3.5
  * https://sizzlejs.com/
  *
@@ -23,6 +16,13 @@
  */
 
 /*!
+ * TVJS Overlays - v0.5.0 - Fri Jul 09 2021
+ *     https://github.com/tvjsx/trading-vue-js
+ *     Copyright (c) 2020 c451 Code's All Right;
+ *     Licensed under the MIT license
+ */
+
+/*!
  * TradingVue.JS - v0.10.0 - Mon Dec 07 2020
  *     https://github.com/tvjsx/trading-vue-js
  *     Copyright (c) 2019 C451 Code's All Right;
@@ -30,8 +30,15 @@
  */
 
 /*!
- * Vue.js v2.6.12
- * (c) 2014-2020 Evan You
+ * TradingVue.JS - v1.0.2 - Thu Mar 18 2021
+ *     https://github.com/tvjsx/trading-vue-js
+ *     Copyright (c) 2019 C451 Code's All Right;
+ *     Licensed under the MIT license
+ */
+
+/*!
+ * Vue.js v2.6.14
+ * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
 
@@ -88,7 +95,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-//! moment.js
-
-//! moment.js locale configuration

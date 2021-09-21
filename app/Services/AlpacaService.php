@@ -22,7 +22,7 @@ class AlpacaService {
 
             $context = stream_context_create($opts);
 
-            $start = Carbon::now()->subMonths(6)->format('Y-m-d') . 'T12:00:00.000000Z';
+            $start = Carbon::now()->subMonths(8)->format('Y-m-d') . 'T12:00:00.000000Z';
 
             //end: should do it while market is open, maybe that allows us to do carbon::now()
             $end = Carbon::now()->subDay()->format('Y-m-d') . 'T12:00:00.000000Z';

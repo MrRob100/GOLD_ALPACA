@@ -31,7 +31,7 @@
                         <input type="text" v-model="v2" class="form-control">
                     </div>
                     <button @click="go" class="btn btn-success">Go</button>
-                    <button @click="add" class="btn btn-success">Add <i class="fa fa-plus"></i></button>
+                    <button @click="add" class="btn btn-success"><i class="fa fa-plus"></i></button>
                     <button @click="randomize" class="btn btn-success"><i class="fa fa-random"></i></button>
                     <button @click="trash" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                 </div>
@@ -60,7 +60,6 @@
             :cr="cr"
             :s="value"
             :t="marketType"
-            :dr="dr"
         ></pair>
     </div>
 </template>
@@ -71,7 +70,17 @@ import Multiselect from "vue-multiselect";
 
 export default {
 
-    props: ["cr", "br", "pr", "tr", "spr", "cpr", "dlr", "bdr", "dr"],
+    props: [
+        "cr",
+        "br",
+        "pr",
+        "tr",
+        "spr",
+        "cpr",
+        "dlr",
+        "bdr",
+        "rand",
+    ],
 
     components: {
         Multiselect

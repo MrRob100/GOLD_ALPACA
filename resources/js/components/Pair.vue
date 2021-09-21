@@ -48,7 +48,6 @@ import Overlays from 'tvjs-overlays';
             cr: "",
             s: "",
             t: "",
-            dr: "",
         },
 
         data: function() {

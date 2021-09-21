@@ -10,7 +10,7 @@
         cpr="{{ route('create.pair') }}"
         dlr="{{ route('delete.pair') }}"
         bdr="{{ route('brecord') }}"
-        dr="{{ route('download') }}"
+        rand="{{ route('randomize') }}"
     >
     </pair-page>
 @endsection
