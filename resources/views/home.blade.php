@@ -11,6 +11,7 @@
         dlr="{{ route('delete.pair') }}"
         bdr="{{ route('brecord') }}"
         rand="{{ route('randomize') }}"
+        market-open-route="{{ route('open') }}"
     >
     </pair-page>
 @endsection

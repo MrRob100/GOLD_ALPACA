@@ -64,4 +64,9 @@ class ManualController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get()->toArray();
     }
+
+    public function open(): bool
+    {
+        return $this->alpacaService->marketOpen();
+    }
 }

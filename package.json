@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "font-awesome-animation": "^1.1.1",
         "trading-vue-js": "^1.0.2",
         "tvjs-overlays": "^0.5.0",
         "vue-multiselect": "^2.1.6"

@@ -2,6 +2,8 @@
     <div>
         <div class="row m-2">
             <div class="col-md-3 mb-3" style="z-index:10">
+                <small v-if="open" style="color: green">Market open</small>
+                <small v-else style="color: red">Market closed</small>
                 <multiselect
                     v-model="marketType"
                     :options="['binance', 'oil', 'metals', 'others', 'iex', 'alpaca']"
@@ -92,6 +94,7 @@ export default {
         "dlr",
         "bdr",
         "rand",
+        'market-open-route',
     ],
 
     components: {
@@ -127,10 +130,22 @@ export default {
             v1: "SPY",
             v2: "NDAQ",
             added: [],
+            open: false,
         }
     },
 
+    mounted() {
+        let _this = this;
+        _this.checkMarketOpen();
+        setInterval(function() {
+            _this.checkMarketOpen();
+        }, 60000);
+    },
+
     methods: {
+        checkMarketOpen: function() {
+            axios.get(this.marketOpenRoute).then(response => (this.open = response.data));
+        },
         getOptions: function() {
             if (this.marketType === "oil") {
                 return this.symbols.oil;

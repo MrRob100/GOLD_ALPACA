@@ -63,3 +63,6 @@ Route::post('/dudpair', [RandomizeController::class, 'trash'])->name('trash');
 Route::get('/transfer', [ManualController::class, 'transfer'])->name('transfer');
 Route::get('/position', [ManualController::class, 'position'])->name('position-route');
 Route::get('/price', [ManualController::class, 'price'])->name('price');
+
+/* check if market open */
+Route::get('/open', [ManualController::class, 'open'])->name('open');

@@ -27,9 +27,11 @@ class AlpacaService {
         } else {
             $start = Carbon::now()->subMonths(8)->format('Y-m-d') . 'T12:00:00.000000Z';
 
-            //end: should do it while market is open, maybe that allows us to do carbon::now()
-            //utilise /v2/clock
-            $end = Carbon::now()->subDay()->format('Y-m-d') . 'T12:00:00.000000Z';
+            if ($this->marketOpen()) {
+                $end = Carbon::now()->format('Y-m-d') . 'T12:00:00.000000Z';
+            } else {
+                $end = Carbon::now()->subDay()->format('Y-m-d') . 'T12:00:00.000000Z';
+            }
 
             $data = json_decode(file_get_contents(
                 "https://data.alpaca.markets/v2/stocks/{$symbol}/bars?timeframe=1Day&start={$start}&end={$end}",
@@ -56,15 +58,6 @@ class AlpacaService {
     }
 
     public function createMarketOrder($side, $amount, $symbol) {
-
-        $endpoint = env('ALPACA_ENDPOINT_PAPER');
-        $key = env('ALPACA_KEY_PAPER');
-        $secret = env('ALPACA_SECRET_PAPER');
-
-//        $endpoint = env('ALPACA_ENDPOINT');
-//        $key = env('ALPACA_KEY');
-//        $secret = env('ALPACA_SECRET');
-
         $postRequest = array(
             'symbol' => $symbol,
             'qty' => $amount, //sort out
@@ -73,13 +66,13 @@ class AlpacaService {
             'type' => 'market',
         );
 
-        $cURLConnection = curl_init($endpoint);
+        $cURLConnection = curl_init($this->endpoint);
         curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $postRequest);
         curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
 
         curl_setopt($cURLConnection, CURLOPT_HTTPHEADER, array(
-            'APCA-API-KEY-ID: ' . $key,
-            'APCA-API-SECRET-KEY: '. $secret,
+            'APCA-API-KEY-ID: ' . $this->key,
+            'APCA-API-SECRET-KEY: '. $this->secret,
         ));
 
         $apiResponse = curl_exec($cURLConnection);
@@ -127,7 +120,7 @@ class AlpacaService {
     public function marketOpen(): bool
     {
         $clock = json_decode(file_get_contents(
-            "https://data.alpaca.markets/v2/clock",
+            "https://api.alpaca.markets/v2/clock",
             false,
             $this->context(),
         ), true);
