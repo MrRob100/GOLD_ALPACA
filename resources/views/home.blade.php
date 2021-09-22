@@ -3,7 +3,7 @@
 @section('content')
     <pair-page
         cr="{{ route('chart.data') }}"
-        br="{{ route('balance') }}"
+        position-route="{{ route('position-route') }}"
         pr="{{ route('price') }}"
         tr="{{ route('transfer') }}"
         spr="{{ route('saved.pairs') }}"

@@ -14,8 +14,9 @@
                 <button class="btn btn-success">Trade</button>
             </div>
         </div>
-        <button @click="getBalance(symbol1, 'one')" class="btn btn-info mb-2">Balance {{ symbol1 }}: {{ bal.one }} (${{ Math.floor(bal.oneUSD) }})</button>
-        <button @click="getBalance(symbol1, 'two')" class="btn btn-info mb-2">Balance {{ symbol2 }}: {{ bal.two }} (${{ Math.floor(bal.twoUSD) }})</button>
+        <br>
+        <button @click="getPosition(symbol1, 'one')" class="btn btn-info mb-2">Balance {{ symbol1 }}: {{ bal.one }} (${{ Math.floor(bal.oneUSD) }})</button>
+        <button @click="getPosition(symbol2, 'two')" class="btn btn-info mb-2">Balance {{ symbol2 }}: {{ bal.two }} (${{ Math.floor(bal.twoUSD) }})</button>
     </div>
 </template>
 
@@ -24,7 +25,7 @@ export default {
     props: [
         "tr",
         "pr",
-        "br",
+        "position-route",
         "cr",
         "symbol1",
         "symbol2",
@@ -70,19 +71,24 @@ export default {
         // showInputForm: function() {
         //     this.showForm = !this.showForm;
         // },
-        // getBalance: function(symbol, which) {
-        //     let _this = this;
-        //     axios.get(this.br, {
-        //         params: {
-        //             of: symbol,
-        //         }
-        //     }).then(function (response) {
-        //         _this.bal[which] = response.data;
-        //         if (which !== 'usdt') {
-        //             _this.inUSD(symbol, response.data, which);
-        //         }
-        //     });
-        // },
+        getPosition: function(symbol, which) {
+            let _this = this;
+            axios.get(this.positionRoute, {
+                params: {
+                    of: symbol,
+                }
+            }).then(function (response) {
+                let suffix = which + 'USD';
+
+                if (response.data === "") {
+                    _this.bal[which] = 0;
+                    _this.bal[suffix] = 0;
+                } else {
+                    _this.bal[which] = response.data.qty;
+                    _this.bal[suffix] = response.data.market_value;
+                }
+            });
+        },
         // inUSD: function(symbol, amount, which) {
         //     let _this = this;
         //     axios.get(this.pr, {

@@ -7,6 +7,20 @@ use Illuminate\Support\Facades\Cache;
 
 class AlpacaService {
 
+    protected string $endpoint;
+    protected string $key;
+    protected string $secret;
+
+    public function __construct() {
+        $this->endpoint = env('ALPACA_ENDPOINT_PAPER');
+        $this->key = env('ALPACA_KEY_PAPER');
+        $this->secret = env('ALPACA_SECRET_PAPER');
+
+//        $this->endpoint = env('ALPACA_ENDPOINT');
+//        $this->key = env('ALPACA_KEY');
+//        $this->secret = env('ALPACA_SECRET');
+    }
+
     public function getBars($symbol) {
         if (Cache::has("{$symbol}_alpaca")) {
             $candles = Cache::get("{$symbol}_alpaca");
@@ -79,9 +93,26 @@ class AlpacaService {
 
     }
 
-    public function balance($of)
+    public function position($of)
     {
-//        /v2/positions/{symbol}
+        $positions = collect($this->positions());
+
+        $position_of = $positions->where('symbol', '=', $of);
+
+        if ($position_of->isNotEmpty()) {
+            return $position_of->first();
+        } else {
+            return false;
+        }
+    }
+
+    public function positions()
+    {
+        return json_decode(file_get_contents(
+            "{$this->endpoint}/v2/positions",
+            false,
+            $this->context(),
+        ), true);
     }
 
     public function price($of)
@@ -91,7 +122,6 @@ class AlpacaService {
             false,
             $this->context(),
         ), true);
-
     }
 
     public function marketOpen(): bool
@@ -111,8 +141,8 @@ class AlpacaService {
             "http" => [
                 "method" => "GET",
                 "header" => "Accept-language: en\r\n" .
-                    "APCA-API-KEY-ID: " . env('ALPACA_KEY') . "\r\n" .
-                    "APCA-API-SECRET-KEY: " . env('ALPACA_SECRET') . "\r\n"
+                    "APCA-API-KEY-ID: " . $this->key . "\r\n" .
+                    "APCA-API-SECRET-KEY: " . $this->secret . "\r\n"
             ]
         ];
 

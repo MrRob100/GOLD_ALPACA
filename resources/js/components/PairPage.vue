@@ -67,7 +67,7 @@
                 :symbol1="v1.toUpperCase()"
                 :symbol2="v2.toUpperCase()"
                 :cr="cr"
-                :br="br"
+                :position-route="positionRoute"
                 :pr="pr"
                 :tr="tr"
             >
@@ -84,7 +84,7 @@ export default {
 
     props: [
         "cr",
-        "br",
+        "position-route",
         "pr",
         "tr",
         "spr",

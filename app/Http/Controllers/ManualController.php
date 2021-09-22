@@ -46,9 +46,9 @@ class ManualController extends Controller
         }
     }
 
-    public function balance()
+    public function position()
     {
-        return $this->alpacaService->balance()[$_GET['of']]['available'];
+        return $this->alpacaService->position($_GET['of']);
     }
 
     public function price()
