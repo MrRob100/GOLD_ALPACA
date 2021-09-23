@@ -21,23 +21,31 @@ class AlpacaService {
 //        $this->secret = env('ALPACA_SECRET');
     }
 
-    public function getBars($symbol) {
-        if (Cache::has("{$symbol}_alpaca")) {
-            $candles = Cache::get("{$symbol}_alpaca");
-        } else {
-            $start = Carbon::now()->subMonths(8)->format('Y-m-d') . 'T12:00:00.000000Z';
+    public function barsCall(string $symbol, string $end)
+    {
+        $start = Carbon::now()->subMonths(8)->format('Y-m-d') . 'T12:00:00.000000Z';
 
-            if ($this->marketOpen()) {
-                $end = Carbon::now()->format('Y-m-d') . 'T12:00:00.000000Z';
-            } else {
-                $end = Carbon::now()->subDay()->format('Y-m-d') . 'T12:00:00.000000Z';
-            }
-
+        try {
             $data = json_decode(file_get_contents(
                 "https://data.alpaca.markets/v2/stocks/{$symbol}/bars?timeframe=1Day&start={$start}&end={$end}",
                 false,
                 $this->context(),
             ), true);
+        } catch(\Exception $e) {
+            return false;
+        }
+
+        return $data;
+    }
+
+    public function getBars($symbol) {
+        if (Cache::has("{$symbol}_alpaca")) {
+            $candles = Cache::get("{$symbol}_alpaca");
+        } else {
+            $endOfDay = Carbon::now()->format('Y-m-d') . 'T12:00:00.000000Z';
+            $endOfYesterday = Carbon::now()->subDay()->format('Y-m-d') . 'T12:00:00.000000Z';
+
+            $data = $this->barsCall($symbol, $endOfDay) ?: $this->barsCall($symbol, $endOfYesterday);
 
             $candles = [];
 
