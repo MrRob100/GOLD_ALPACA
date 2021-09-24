@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\PairBalance;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 
@@ -123,16 +124,32 @@ class AlpacaService {
             ];
         }
 
+        $position_to = $this->position($from);
+
+        $price_from = $this->price($to);
+        $price_to = $this->price($to);
+
+        $asset_value_from = $position_from['qty'] * $position_from['current_price'];
+        $position_to_qty = $position_to ? $position_to['qty'] : 0;
+
+        PairBalance::create([
+            's1' => $from,
+            'balance_s1' => $position_from['qty'],
+            'balance_s1_usd' => $asset_value_from,
+            'price_at_trade_s1' => $price_from,
+            's2' => $to,
+            'balance_s2' => $position_to_qty,
+            'balance_s2_usd' => $position_to_qty * $price_to,
+            'price_at_trade_s2' => $price_to,
+        ]);
+
         $sell = $this->createMarketOrder('sell', $position_from['qty'] / $portion, $from);
 
-        $sale_value = $position_from['qty'] * $position_from['current_price'];
 
         sleep(1);
 
-        $price_to = $this->price($to);
-
         //delay logic?
-        $buy = $this->createMarketOrder('buy', $sale_value / $price_to, $to);
+        $buy = $this->createMarketOrder('buy', $sale_value_from / $price_to, $to);
 
         return [
             'success' => true,
