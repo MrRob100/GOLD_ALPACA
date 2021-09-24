@@ -47,8 +47,8 @@ class ChartController extends Controller
         $response1 = $this->alpacaService->getBars($request->s1);
         $response2 = $this->alpacaService->getBars($request->s2);
 
-        $size_max = max(sizeof($response1), sizeof($response2) - 1);
-        $size_min = min(sizeof($response1), sizeof($response2) - 1);
+        $size_max = max(sizeof($response1), sizeof($response2));
+        $size_min = min(sizeof($response1), sizeof($response2));
 
         $pair = [];
         for($i=0; $i<$size_max; $i++) {
