@@ -60,7 +60,7 @@ Route::get('/randomize', [RandomizeController::class, 'randomPair'])->name('rand
 Route::post('/dudpair', [RandomizeController::class, 'trash'])->name('trash');
 
 /* manually checking / transfering */
-Route::get('/transfer', [ManualController::class, 'transfer'])->name('transfer');
+Route::get('/transfer', [ManualController::class, 'transfer'])->name('transfer-route');
 Route::get('/position', [ManualController::class, 'position'])->name('position-route');
 Route::get('/price', [ManualController::class, 'price'])->name('price');
 

@@ -71,7 +71,7 @@
                 :cr="cr"
                 :position-route="positionRoute"
                 :pr="pr"
-                :tr="tr"
+                :transfer-route="transferRoute"
             >
             </controls>
         </div>
@@ -88,7 +88,7 @@ export default {
         "cr",
         "position-route",
         "pr",
-        "tr",
+        "transfer-route",
         "spr",
         "cpr",
         "dlr",

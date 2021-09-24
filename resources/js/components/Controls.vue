@@ -3,27 +3,31 @@
         <div class="row">
             <div class="col-3">
                 <p>Transfer from {{ symbol1 }} to {{ symbol2 }}</p>
-                <input v-model=amount1to2 type="range" min="0" max="100" value="50" class="slider" id="myRange">
+                <input v-model=amount1to2 type="range" min="0" max="100" value="50" class="slider">
                 <p>{{ amount1to2 }}%</p>
-                <button class="btn btn-success">Trade</button>
+                <button @click="transfer(symbol1, symbol2, (1/amount1to2 * 100))" class="btn btn-success">Trade</button>
+                <br>
+                <br>
+                <button @click="getPosition(symbol1, 'one')" class="btn btn-info mb-2">Balance {{ symbol1 }}: {{ bal.one }} (${{ Math.floor(bal.oneUSD) }})</button>
             </div>
             <div class="col-3">
                 <p>Transfer from {{ symbol2 }} to {{ symbol1 }}</p>
-                <input v-model=amount2to1 type="range" min="0" max="100" value="50" class="slider" id="myRange">
+                <input v-model=amount2to1 type="range" min="0" max="100" value="50" class="slider">
                 <p>{{ amount2to1 }}%</p>
-                <button class="btn btn-success">Trade</button>
+                <button @click="transfer(symbol2, symbol1, (1/amount2to1 * 100))" class="btn btn-success">Trade</button>
+                <br>
+                <br>
+                <button @click="getPosition(symbol2, 'two')" class="btn btn-info mb-2">Balance {{ symbol2 }}: {{ bal.two }} (${{ Math.floor(bal.twoUSD) }})</button>
             </div>
         </div>
         <br>
-        <button @click="getPosition(symbol1, 'one')" class="btn btn-info mb-2">Balance {{ symbol1 }}: {{ bal.one }} (${{ Math.floor(bal.oneUSD) }})</button>
-        <button @click="getPosition(symbol2, 'two')" class="btn btn-info mb-2">Balance {{ symbol2 }}: {{ bal.two }} (${{ Math.floor(bal.twoUSD) }})</button>
     </div>
 </template>
 
 <script>
 export default {
     props: [
-        "tr",
+        "transfer-route",
         "pr",
         "position-route",
         "cr",
@@ -103,15 +107,18 @@ export default {
             if (confirm("Are you sure you want to transfer " + from + " to " + to +"?")) {
                 this.disabled = true;
                 let _this = this;
-                axios.get(this.tr, {
+                axios.get(this.transferRoute, {
                     params: {
                         from: from.toUpperCase(),
                         to: to.toUpperCase(),
                         portion: portion,
                     }
                 }).then(function (response) {
-                    _this.getBalance(from);
-                    _this.getBalance(to);
+
+                    console.log(response);
+
+                    // _this.getBalance(from);
+                    // _this.getBalance(to);
                     _this.disabled = !response.data;
                 });
             }
@@ -153,14 +160,14 @@ export default {
     appearance: none;
     width: 25px;
     height: 25px;
-    background: #04AA6D;
+    background: #38c172;
     cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
     width: 25px;
     height: 25px;
-    background: #04AA6D;
+    background: #38c172;
     cursor: pointer;
 }
 </style>

@@ -5,7 +5,7 @@
         cr="{{ route('chart.data') }}"
         position-route="{{ route('position-route') }}"
         pr="{{ route('price') }}"
-        tr="{{ route('transfer') }}"
+        transfer-route="{{ route('transfer-route') }}"
         spr="{{ route('saved.pairs') }}"
         cpr="{{ route('create.pair') }}"
         dlr="{{ route('delete.pair') }}"

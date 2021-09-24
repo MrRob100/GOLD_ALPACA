@@ -66,16 +66,16 @@ class AlpacaService {
     }
 
     public function createMarketOrder($side, $amount, $symbol) {
-        $postRequest = array(
+        $postRequest = [
             'symbol' => $symbol,
-            'qty' => $amount, //sort out
-            'time_in_force' => 'gtc',
+            'qty' => $amount,
+            'time_in_force' => 'day',
             'side' => $side,
             'type' => 'market',
-        );
+        ];
 
-        $cURLConnection = curl_init($this->endpoint);
-        curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, $postRequest);
+        $cURLConnection = curl_init("{$this->endpoint}/v2/orders");
+        curl_setopt($cURLConnection, CURLOPT_POSTFIELDS, json_encode($postRequest));
         curl_setopt($cURLConnection, CURLOPT_RETURNTRANSFER, true);
 
         curl_setopt($cURLConnection, CURLOPT_HTTPHEADER, array(
@@ -89,8 +89,55 @@ class AlpacaService {
         return json_decode($apiResponse);
     }
 
+    public function orderFilled(string $id): bool
+    {
+        $n = 0;
+        $order = json_decode(file_get_contents(
+            "{$this->endpoint}/v2/orders/{$id}",
+            false,
+            $this->context(),
+        ), true);
+
+        if ($order['status'] === 'filled') {
+            return true;
+        } else {
+            sleep(1);
+            $n ++;
+
+            if ($n >= 5) {
+                return false;
+            }
+
+            return $this->orderFilled($id);
+        }
+    }
+
     public function sideToSide($from, $to, $portion)
     {
+        $position_from = $this->position($from);
+
+        if (!$position_from) {
+            return [
+                'success' => false,
+                'message' => "no $from position",
+            ];
+        }
+
+        $sell = $this->createMarketOrder('sell', $position_from['qty'] / $portion, $from);
+
+        $sale_value = $position_from['qty'] * $position_from['current_price'];
+
+        sleep(1);
+
+        $price_to = $this->price($to);
+
+        //delay logic?
+        $buy = $this->createMarketOrder('buy', $sale_value / $price_to, $to);
+
+        return [
+            'success' => true,
+            'message' => "sold $from and bought $to",
+        ];
 
     }
 
@@ -116,13 +163,13 @@ class AlpacaService {
         ), true);
     }
 
-    public function price($of)
+    public function price($of): float
     {
-        $data = json_decode(file_get_contents(
-            "https://data.alpaca.markets/v2/stocks/{symbol}/trades/latest",
+        return json_decode(file_get_contents(
+            "https://data.alpaca.markets/v2/stocks/{$of}/trades/latest",
             false,
             $this->context(),
-        ), true);
+        ), true)['trade']['p'];
     }
 
     public function marketOpen(): bool

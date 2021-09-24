@@ -20,30 +20,35 @@ class ManualController extends Controller
     {
         $transfer = $this->alpacaService->sideToSide($_GET['from'], $_GET['to'], $_GET['portion']);
 
-        if ($transfer) {
+//        if ($transfer) {
+//
+//            Log::info('transfer success data to log in db: '.json_encode($transfer));
+//            //transfer is the order array
+//
+//            $balance = $this->alpacaService->balance();
+//
+//            $price = $transfer['fills'][0]['price'];
+//
+//        $balance =
+//
+//            $b_record = Balance::create([
+//                'symbol' => $_GET['to'],
+//                'balance' => $transfer['balance_before'],
+//                'balance_usd' => $balance * $price,
+//                'price_at_trade' => $price,
+//                'note' => 'after trade',
+//            ]);
+//
+//            return true;
+//
+//        } else {
+//            Log::error("transfer from {$_GET['from']} to {$_GET['to']} failed");
+//            return false;
+//        }
 
-            Log::info('transfer success data to log in db: '.json_encode($transfer));
-            //transfer is the order array
 
-            $balance = $this->alpacaService->balance();
 
-            $price = $transfer['fills'][0]['price'];
-
-            //to after
-            $b_record = Balance::create([
-                'symbol' => $_GET['to'],
-                'balance' => $balance,
-                'balance_usd' => $balance * $price,
-                'price_at_trade' => $price,
-                'note' => 'after trade',
-            ]);
-
-            return true;
-
-        } else {
-            Log::error("transfer from {$_GET['from']} to {$_GET['to']} failed");
-            return false;
-        }
+        return $transfer;
     }
 
     public function position()
