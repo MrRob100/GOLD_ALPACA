@@ -25,6 +25,7 @@ Vue.component('pair-page', require('./components/PairPage.vue').default);
 Vue.component('list', require('./components/List.vue').default);
 Vue.component('record', require('./components/Record.vue').default);
 Vue.component('controls', require('./components/Controls.vue').default);
+Vue.component('pair-record', require('./components/PairRecord.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

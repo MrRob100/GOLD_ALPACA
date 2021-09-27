@@ -2,6 +2,7 @@
 
 @section('content')
     <pair-page
+        balance-route="{{ route('balance') }}"
         cr="{{ route('chart.data') }}"
         position-route="{{ route('position-route') }}"
         pr="{{ route('price') }}"

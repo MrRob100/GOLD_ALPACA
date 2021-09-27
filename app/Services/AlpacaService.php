@@ -134,19 +134,20 @@ class AlpacaService {
 
         PairBalance::create([
             's1' => $from,
-            'balance_s1' => $position_from['qty'],
-            'balance_s1_usd' => $asset_value_from,
-            'price_at_trade_s1' => $price_from,
+            'balance_s1' => round($position_from['qty'], 1),
+            'balance_s1_usd' => round($asset_value_from, 1),
+            'price_at_trade_s1' => round($price_from, 1),
             's2' => $to,
-            'balance_s2' => $position_to_qty,
-            'balance_s2_usd' => $position_to_qty * $price_to,
-            'price_at_trade_s2' => $price_to,
+            'balance_s2' => round($position_to_qty, 1),
+            'balance_s2_usd' => round($position_to_qty * $price_to, 1),
+            'price_at_trade_s2' => round($price_to, 1),
         ]);
 
         $sell = $this->createMarketOrder('sell', $position_from['qty'] / $portion, $from);
 
-
         sleep(1);
+
+        $sale_value_from = $sell->qty * $position_to['current_price'];
 
         //delay logic?
         $buy = $this->createMarketOrder('buy', $sale_value_from / $price_to, $to);

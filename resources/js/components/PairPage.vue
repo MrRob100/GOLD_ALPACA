@@ -59,6 +59,7 @@
             </div>
         </div>
         <pair
+            @lasts="sendLasts"
             :cr="cr"
             :s="value"
             :t="marketType"
@@ -75,6 +76,11 @@
             >
             </controls>
         </div>
+        <pair-record
+            :balance-route="balanceRoute"
+            :value="value"
+            :push-lasts="pushLasts">
+        </pair-record>
     </div>
 </template>
 
@@ -85,6 +91,7 @@ import Multiselect from "vue-multiselect";
 export default {
 
     props: [
+        "balance-route",
         "cr",
         "position-route",
         "pr",
@@ -130,6 +137,7 @@ export default {
             v1: "SPY",
             v2: "NDAQ",
             added: [],
+            pushLasts: [],
             open: false,
         }
     },
@@ -209,7 +217,10 @@ export default {
                 }
                 _this.v2 = '';
             })
-        }
+        },
+        sendLasts: function(data) {
+            this.pushLasts = data;
+        },
     },
 
     watch: {
