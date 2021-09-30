@@ -1,15 +1,15 @@
 <template>
-    <div class="mr-5 ml-5 mt-5 mb-5 row">
-        <div class="col-10 m-auto">
-            <div v-if="data.months" class="mb-3">
-                <label class="font-weight-normal mr-3" for="month">Month:</label>
-                <select class="form-control col-3" id="month" name="month" v-model="month" @change="getData(s1, s2, month)">
-                    <option v-for="month in data.months" :value="month.value">{{ month.name }}</option>
-                </select>
+    <div class="row">
+        <div class="col-10 m-auto" v-if="data.months">
+            <div class="row mb-2">
+                <div class="pr-2 col-3">
+                    <select class="form-control" id="month" name="month" v-model="month" @change="getData(s1, s2, month)">
+                        <option v-for="month in data.months" :value="month.value">{{ month.name }}</option>
+                    </select>
+                </div>
+                <button @click="getData(s1, s2)" class="btn btn-primary col-2 mr-2">All</button>
+                <button @click="getData(s1, s2, month)" class="btn btn-primary col-2">Per Month</button>
             </div>
-
-            <button @click="getData(s1, s2)" class="btn btn-primary">All</button>
-            <button @click="getData(s1, s2, month)" class="btn btn-primary">Per Month</button>
             <div id="performance_container">
             </div>
         </div>

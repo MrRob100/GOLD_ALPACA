@@ -75,12 +75,12 @@
                 :transfer-route="transferRoute"
             >
             </controls>
+            <pair-record
+                :balance-route="balanceRoute"
+                :value="value"
+                :push-lasts="pushLasts">
+            </pair-record>
         </div>
-        <pair-record
-            :balance-route="balanceRoute"
-            :value="value"
-            :push-lasts="pushLasts">
-        </pair-record>
     </div>
 </template>
 

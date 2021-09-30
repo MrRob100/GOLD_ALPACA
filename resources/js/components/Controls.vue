@@ -1,23 +1,27 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-3">
-                <p>Transfer from {{ symbol1 }} to {{ symbol2 }}</p>
-                <input v-model=amount1to2 type="range" min="0" max="100" value="50" class="slider">
-                <p>{{ amount1to2 }}%</p>
-                <button @click="transfer(symbol1, symbol2, (1/amount1to2 * 100))" class="btn btn-success">Trade</button>
-                <br>
-                <br>
-                <button @click="getPosition(symbol1, 'one')" class="btn btn-info mb-2">Balance {{ symbol1 }}: {{ bal.one }} (${{ Math.floor(bal.oneUSD) }})</button>
-            </div>
-            <div class="col-3">
-                <p>Transfer from {{ symbol2 }} to {{ symbol1 }}</p>
-                <input v-model=amount2to1 type="range" min="0" max="100" value="50" class="slider">
-                <p>{{ amount2to1 }}%</p>
-                <button @click="transfer(symbol2, symbol1, (1/amount2to1 * 100))" class="btn btn-success">Trade</button>
-                <br>
-                <br>
-                <button @click="getPosition(symbol2, 'two')" class="btn btn-info mb-2">Balance {{ symbol2 }}: {{ bal.two }} (${{ Math.floor(bal.twoUSD) }})</button>
+            <div class="col-10 m-auto">
+                <div class="row">
+                    <div class="col-6">
+                        <p>Transfer from {{ symbol1 }} to {{ symbol2 }}</p>
+                        <input v-model=amount1to2 type="range" min="0" max="100" value="50" class="slider">
+                        <p>{{ amount1to2 }}%</p>
+                        <button @click="transfer(symbol1, symbol2, (1/amount1to2 * 100))" class="btn btn-success">Trade</button>
+                        <br>
+                        <br>
+                        <button @click="getPosition(symbol1, 'one')" class="btn btn-info mb-2">Balance {{ symbol1 }}: {{ bal.one }} (${{ Math.floor(bal.oneUSD) }})</button>
+                    </div>
+                    <div class="col-6">
+                        <p>Transfer from {{ symbol2 }} to {{ symbol1 }}</p>
+                        <input v-model=amount2to1 type="range" min="0" max="100" value="50" class="slider">
+                        <p>{{ amount2to1 }}%</p>
+                        <button @click="transfer(symbol2, symbol1, (1/amount2to1 * 100))" class="btn btn-success">Trade</button>
+                        <br>
+                        <br>
+                        <button @click="getPosition(symbol2, 'two')" class="btn btn-info mb-2">Balance {{ symbol2 }}: {{ bal.two }} (${{ Math.floor(bal.twoUSD) }})</button>
+                    </div>
+                </div>
             </div>
         </div>
         <br>

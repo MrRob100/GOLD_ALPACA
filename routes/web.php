@@ -56,6 +56,9 @@ Route::get('/ong', [OngController::class, 'get']);
 /* random pair */
 Route::get('/randomize', [RandomizeController::class, 'randomPair'])->name('randomize');
 
+/* balpairrecord */
+Route::get('/get_pair_data', [ManualController::class, 'getPairData'])->name('getPairData');
+
 /* trash a pair */
 Route::post('/dudpair', [RandomizeController::class, 'trash'])->name('trash');
 
