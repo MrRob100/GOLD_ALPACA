@@ -22,6 +22,22 @@
                         <button @click="getPosition(symbol2, 'two')" class="btn btn-info mb-2">Balance {{ symbol2 }}: {{ bal.two }} (${{ Math.floor(bal.twoUSD) }})</button>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-4">
+                        <button @click="showInputForm()" class="btn btn-info mb-2">Add Input</button>
+                        <div v-if="showForm" class="mt-3">
+                            <form v-on:submit.prevent>
+                                <div class="form-group pl-0">
+                                    <input class="form-control mb-2" v-model="input.one" type="number" step="any" :placeholder="'amount ' + symbol1">
+                                    <input class="form-control mb-2" v-model="input.oneUSD" type="number" step="any" :placeholder="'amount ' + symbol1 + ' usd'">
+                                    <input class="form-control mb-2" v-model="input.two" type="number" step="any" :placeholder="'amount ' + symbol2">
+                                    <input class="form-control mb-2" v-model="input.twoUSD" type="number" step="any" :placeholder="'amount ' + symbol2 + ' usd'">
+                                    <button @click="createInputRecord()" class="btn btn-success">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <br>
@@ -37,7 +53,7 @@ export default {
         "cr",
         "symbol1",
         "symbol2",
-        "rr",
+        "record-route",
     ],
     data: function() {
         return {
@@ -66,19 +82,19 @@ export default {
     },
 
     methods: {
-        // createInputRecord: function() {
-        //     this.input.symbol1 = this.symbol1;
-        //     this.input.symbol2 = this.symbol2;
-        //
-        //     axios.post(this.rr, this.input).then(() => {
-        //         this.showForm = false;
-        //     }).catch(error => {
-        //         console.error(error);
-        //     })
-        // },
-        // showInputForm: function() {
-        //     this.showForm = !this.showForm;
-        // },
+        createInputRecord: function() {
+            this.input.symbol1 = this.symbol1;
+            this.input.symbol2 = this.symbol2;
+
+            axios.post(this.recordRoute, this.input).then(() => {
+                this.showForm = false;
+            }).catch(error => {
+                console.error(error);
+            })
+        },
+        showInputForm: function() {
+            this.showForm = !this.showForm;
+        },
         getPosition: function(symbol, which) {
             let _this = this;
             axios.get(this.positionRoute, {
@@ -118,9 +134,6 @@ export default {
                         portion: portion,
                     }
                 }).then(function (response) {
-
-                    console.log(response);
-
                     // _this.getBalance(from);
                     // _this.getBalance(to);
                     _this.disabled = !response.data;

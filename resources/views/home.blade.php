@@ -5,6 +5,7 @@
         balance-route="{{ route('balance') }}"
         cr="{{ route('chart.data') }}"
         position-route="{{ route('position-route') }}"
+        record-route="{{ route('inputs.create') }}"
         pr="{{ route('price') }}"
         transfer-route="{{ route('transfer-route') }}"
         spr="{{ route('saved.pairs') }}"

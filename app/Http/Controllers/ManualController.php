@@ -89,6 +89,18 @@ class ManualController extends Controller
         $query = PairBalance::where('s1', $request->s1)
             ->where('s2', $request->s2);
 
+        $query = PairBalance::where(
+            function ($query) use ($request) {
+                $query->where('s1', $request->s1)
+                    ->where('s2', $request->s2);
+            }
+        )->orWhere(
+            function ($query) use ($request) {
+                $query->where('s1', $request->s2)
+                    ->where('s2', $request->s1);
+            }
+        );
+
         if ($month) {
             $query = $query->whereBetween('created_at', [$startDate, $endDate]);
         }
@@ -124,6 +136,11 @@ class ManualController extends Controller
                     //separate column for this months proffits
 
                     $merged = array_merge($pair_balance->toArray(), [
+                        'balance_total_usd' => $pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd,
+                        'worth_if_holding' => '',
+                        'total_input_usd' => $relInputs->sum('amount1_usd') + $relInputs->sum('amount2_usd'),
+                        'profit_usd' => '',
+                        'delta_profit_and_worth_if_holding_usd' => '',
                         'input_symbol1' => $relInputs->sum('amount1'),
                         'input_symbol1_usd' => $relInputs->sum('amount1_usd'),
                         'input_symbol2' => $relInputs->sum('amount2'),

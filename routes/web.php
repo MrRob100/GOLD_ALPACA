@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InputController;
 use App\Http\Controllers\ManualController;
 use App\Http\Controllers\OngController;
 use App\Http\Controllers\PairsController;
@@ -61,6 +62,9 @@ Route::get('/get_pair_data', [ManualController::class, 'getPairData'])->name('ge
 
 /* trash a pair */
 Route::post('/dudpair', [RandomizeController::class, 'trash'])->name('trash');
+
+/* create an input */
+Route::post('/input', [InputController::class, 'create'])->name('inputs.create');
 
 /* manually checking / transfering */
 Route::get('/transfer', [ManualController::class, 'transfer'])->name('transfer-route');

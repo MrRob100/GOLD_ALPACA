@@ -72,6 +72,7 @@
                 :cr="cr"
                 :position-route="positionRoute"
                 :pr="pr"
+                :record-route="recordRoute"
                 :transfer-route="transferRoute"
             >
             </controls>
@@ -94,6 +95,7 @@ export default {
         "balance-route",
         "cr",
         "position-route",
+        "record-route",
         "pr",
         "transfer-route",
         "spr",
