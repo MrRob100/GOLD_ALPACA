@@ -86,9 +86,6 @@ class ManualController extends Controller
         $startDate = Carbon::createFromDate($year, $month, 1);
         $endDate = Carbon::createFromDate($year, $month, 1)->addMonth();
 
-        $query = PairBalance::where('s1', $request->s1)
-            ->where('s2', $request->s2);
-
         $query = PairBalance::where(
             function ($query) use ($request) {
                 $query->where('s1', $request->s1)
@@ -137,16 +134,10 @@ class ManualController extends Controller
 
                     $merged = array_merge($pair_balance->toArray(), [
                         'balance_total_usd' => $pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd,
-                        'worth_if_holding' => '',
+                        'worth_if_holding' => ($relInputs->sum('amount1') * $pair_balance->price_at_trade_s1) + ($relInputs->sum('amount2') * $pair_balance->price_at_trade_s2),
                         'total_input_usd' => $relInputs->sum('amount1_usd') + $relInputs->sum('amount2_usd'),
-                        'profit_usd' => '',
-                        'delta_profit_and_worth_if_holding_usd' => '',
-                        'input_symbol1' => $relInputs->sum('amount1'),
-                        'input_symbol1_usd' => $relInputs->sum('amount1_usd'),
-                        'input_symbol2' => $relInputs->sum('amount2'),
-                        'input_symbol2_usd' => $relInputs->sum('amount2_usd'),
-                        'wbw_usd_1' => $relInputs->sum('amount1') * $pair_balance->price_at_trade_s1,
-                        'wbw_usd_2' => $relInputs->sum('amount2') * $pair_balance->price_at_trade_s2,
+                        'profit_usd' => $pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd - $relInputs->sum('amount1_usd') + $relInputs->sum('amount2_usd'),
+                        'delta_worth_and_worth_if_holding_usd' => ($pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd) - ($relInputs->sum('amount1') * $pair_balance->price_at_trade_s1) + ($relInputs->sum('amount2') * $pair_balance->price_at_trade_s2),
                     ]);
 
                     $data[] = $merged;
@@ -155,6 +146,10 @@ class ManualController extends Controller
         }
 
         return [
+            'date_labels' => $pair_balances->pluck('created_at'),
+            'balance_total_usd' => collect($data)->unique()->pluck('balance_total_usd'),
+            'worth_if_holding' => collect($data)->unique()->pluck('worth_if_holding'),
+            'cumulative_inputs' => collect($data)->unique()->pluck('total_input_usd'),
             'records' => collect($data)->unique()->toArray(),
             'current_month' => $request->month ?: Carbon::now()->month,
             'months' => [
@@ -209,4 +204,8 @@ class ManualController extends Controller
             ]
         ];
     }
-}
+
+    public function balance(Request $request)
+    {
+        return $this->alpacaService->position($request->of);
+    }}

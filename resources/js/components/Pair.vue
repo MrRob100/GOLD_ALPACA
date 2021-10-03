@@ -102,6 +102,14 @@ import Overlays from 'tvjs-overlays';
                     this.tradingVueData.data.chart.data = response.data['pair'];
                     this.tradingVueData.data.onchart.data = response.data['pair'];
                     this.tradingVue2.data.chart.data = response.data['second'];
+
+                    let lasts = [
+                        {"s1": response.data['first'][response.data['first'].length - 1][4]},
+                        {"s2": response.data['second'][response.data['second'].length - 1][4]},
+                    ];
+
+                    this.$emit('lasts', lasts)
+
                 });
             },
             setChartHeading: function(val) {

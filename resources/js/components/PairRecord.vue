@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col-10 m-auto" v-if="data.months">
+        <div class="col-10 m-auto">
             <div class="row mb-2">
                 <div class="pr-2 col-3">
                     <select class="form-control" id="month" name="month" v-model="month" @change="getData(s1, s2, month)">
@@ -18,7 +18,7 @@
                 <thead>
                 <tr>
                     <th></th>
-                    <th class="text-center" colspan="7">Real</th>
+                    <th class="text-center" colspan="5">Real</th>
                     <th class="text-center" colspan="2"></th>
                     <th class="text-center">If Holding (from time)</th>
                     <th class="text-center">If $</th>
@@ -27,7 +27,7 @@
                     <th></th>
                     <th class="text-center" colspan="2">Balance {{ s1 }}</th>
                     <th class="text-center" colspan="2">Balance {{ s2 }}</th>
-                    <th class="text-center" colspan="3">Σ</th>
+                    <th class="text-center">Σ</th>
                     <th class="text-center" colspan="2">Δ</th>
                     <th class="text-center">Σ</th>
                     <th class="text-center">Σ</th>
@@ -38,8 +38,6 @@
                     <th class="text-center">$</th>
                     <th class="text-center">{{ s2 }}</th>
                     <th class="text-center">$</th>
-                    <th class="text-center">In {{ s1 }}</th>
-                    <th class="text-center">In {{ s2 }}</th>
                     <th class="text-center">$</th>
                     <th class="text-center">Δ</th>
                     <th class="text-center">Δi</th>
@@ -50,21 +48,19 @@
                 <tbody>
                 <tr v-for="item in data.records">
                     <td>{{ formatDate(item.created_at) }}</td>
-                    <td>{{ item.balance_s1.toFixed(2) }}</td>
-                    <td>{{ item.balance_s1_usd.toFixed(2) }}</td>
-                    <td>{{ item.balance_s2.toFixed(2) }}</td>
-                    <td>{{ item.balance_s2_usd.toFixed(2) }}</td>
-                    <td class="bg-secondary">{{ ((item.balance_s1_usd + item.balance_s2_usd) / item.price_at_trade_s1).toFixed(2) }}</td>
-                    <td class="bg-secondary">{{ ((item.balance_s1_usd + item.balance_s2_usd) / item.price_at_trade_s2).toFixed(2) }}</td>
-                    <td class="bg-info text-light">{{ (item.balance_s1_usd + item.balance_s2_usd).toFixed(2) }}</td>
+                    <td>{{ parseFloat(item.balance_s1).toFixed(2) }}</td>
+                    <td>{{ parseFloat(item.balance_s1_usd).toFixed(2) }}</td>
+                    <td>{{ parseFloat(item.balance_s2).toFixed(2) }}</td>
+                    <td>{{ parseFloat(item.balance_s2_usd).toFixed(2) }}</td>
+                    <td class="bg-info text-light">{{ (item.balance_total_usd).toFixed(2) }}</td>
 
-                    <td class="text-light" :class="((item.balance_s1_usd + item.balance_s2_usd) - (item.wbw_usd_1 + item.wbw_usd_2)) > 0 ? 'bg-success' : 'bg-danger'"
-                    >{{ ((item.balance_s1_usd + item.balance_s2_usd) - (item.wbw_usd_1 + item.wbw_usd_2)).toFixed(2) }}</td>
+                    <td class="text-light" :class="item.delta_worth_and_worth_if_holding_usd > 0 ? 'bg-success' : 'bg-danger'"
+                    >{{ item.delta_worth_and_worth_if_holding_usd.toFixed(2) }}</td>
 
-                    <td :class="((item.balance_s1_usd + item.balance_s2_usd) - (item.input_symbol1_usd + item.input_symbol2_usd)) > 0 ? 'bg-success' : 'bg-danger'"
-                    >{{ ((item.balance_s1_usd + item.balance_s2_usd) - (item.input_symbol1_usd + item.input_symbol2_usd)).toFixed(2) }}</td>
-                    <td class="bg-dark text-light">{{ (item.wbw_usd_1 + item.wbw_usd_2).toFixed(2) }}</td>
-                    <td class="bg-secondary text-light">{{ (item.input_symbol1_usd + item.input_symbol2_usd).toFixed(2) }}</td>
+                    <td :class="item.profit_usd > 0 ? 'bg-success' : 'bg-danger'"
+                    >{{ item.profit_usd.toFixed(2) }}</td>
+                    <td class="bg-dark text-light">{{ item.worth_if_holding.toFixed(2) }}</td>
+                    <td class="bg-secondary text-light">{{ item.total_input_usd.toFixed(2) }}</td>
                 </tr>
                 <tr>
                     <td></td>
@@ -77,29 +73,34 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                    <td></td>
                 </tr>
-                <tr v-if="((bals1 && bals2) || (bals1 && bals2 == 0) || (bals2 && bals1 == 0)) && (this.latestRecord) && showNewRecord">
+                <tr v-if="bals1 !== 0 && bals1_usd !== 0 && bals2 !== 0 && bals2_usd !== 0">
                     <td>{{ formatDate(new Date()) }}</td>
-                    <td>{{ bals1.toFixed(2) }}</td>
-                    <td>{{ (bals1 * pricec1Now).toFixed(2) }}</td>
-                    <td>{{ bals2.toFixed(2) }}</td>
-                    <td>{{ (bals2 * pricec2Now).toFixed(2) }}</td>
-                    <td class="bg-secondary">{{ (((bals1 * pricec1Now) + (bals2 * pricec2Now)) / pricec1Now).toFixed(2) }}</td>
-                    <td class="bg-secondary">{{ (((bals1 * pricec1Now) + (bals2 * pricec2Now)) / pricec2Now).toFixed(2) }}</td>
-                    <td class="bg-info text-light">{{ ((bals1 * pricec1Now) + (bals2 * pricec2Now)).toFixed(2) }}</td>
-                    <td class="text-light"
-                        :class="(((bals1 * pricec1Now) + (bals2 * pricec2Now)) - ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now)) > 0 ? 'bg-success' : 'bg-danger'"
-                    >
-                        {{ (((bals1 * pricec1Now) + (bals2 * pricec2Now)) - ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now)).toFixed(2) }}
-                    </td>
-                    <td :class="((bals1 * pricec1Now) + (bals2 * pricec2Now)) - (this.totalInput) > 0 ? 'bg-success' : 'bg-danger'"
-                    >
-                        {{ (((bals1 * pricec1Now) + (bals2 * pricec2Now)) - (this.totalInput)).toFixed(2) }}
-                    </td>
-                    <td class="bg-dark text-light">{{ ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now).toFixed(2) }}</td>
-                    <td class="bg-secondary text-light">{{ (this.totalInput).toFixed(2) }}</td>
+<!--                    <td>{{ bals1.toFixed(2) }}</td>-->
+<!--                    <td>{{ bals1_usd.toFixed(2) }}</td>-->
+<!--                    <td>{{ bals2.toFixed(2) }}</td>-->
+<!--                    <td>{{ bals2_usd.toFixed(2) }}</td>-->
+                    <td>{{ bals1 }}</td>
+                    <td>{{ bals1_usd }}</td>
+                    <td>{{ bals2 }}</td>
+                    <td>{{ bals2_usd }}</td>
+                    <td class="bg-info text-light">{{ parseFloat(bals1_usd + bals2_usd).toFixed(2) }}</td>
+<!--                    <td class="bg-info text-light">{{ (bals1_usd + bals2_usd).toFixed(2) }}</td>-->
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+<!--                    <td class="text-light"-->
+<!--                        :class="(((bals1 * pricec1Now) + (bals2 * pricec2Now)) - ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now)) > 0 ? 'bg-success' : 'bg-danger'"-->
+<!--                    >-->
+<!--                        {{ (((bals1 * pricec1Now) + (bals2 * pricec2Now)) - ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now)).toFixed(2) }}-->
+<!--                    </td>-->
+<!--                    <td :class="((bals1 * pricec1Now) + (bals2 * pricec2Now)) - (this.totalInput) > 0 ? 'bg-success' : 'bg-danger'"-->
+<!--                    >-->
+<!--                        {{ (((bals1 * pricec1Now) + (bals2 * pricec2Now)) - (this.totalInput)).toFixed(2) }}-->
+<!--                    </td>-->
+<!--                    <td class="bg-dark text-light">{{ ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now).toFixed(2) }}</td>-->
+<!--                    <td class="bg-secondary text-light">{{ (this.totalInput).toFixed(2) }}</td>-->
                 </tr>
                 </tbody>
             </table>
@@ -116,7 +117,7 @@ export default {
     props: [
         "value",
         "push-lasts",
-        "br"
+        "balance-route"
     ],
     data: function() {
         return {
@@ -126,8 +127,10 @@ export default {
             pricec2: null,
             s1: null,
             s2: null,
-            bals1: null,
-            bals2: null,
+            bals1: 0,
+            bals1_usd: 0,
+            bals2: 0,
+            bals2_usd: 0,
             pricec1Now: null,
             pricec2Now: null,
             latestInput: {
@@ -140,7 +143,6 @@ export default {
                     usd: null,
                 },
             },
-            showNewRecord: false,
             graphData: {
                 type: "bar",
                 data: {
@@ -199,21 +201,17 @@ export default {
 
         formatChartData: function(data) {
             let labels = [];
-            let value = [];
-            let valueIfHolding = [];
-            let inputs = [];
 
             Object.values(data.records).forEach((item) => {
                 labels.push(item.created_at.substring(0, 10));
-                value.push(item.balance_s1_usd + item.balance_s2_usd);
-                valueIfHolding.push(item.wbw_usd_1 + item.wbw_usd_2);
-                inputs.push(item.input_symbol1_usd + item.input_symbol2_usd);
             });
 
             this.graphData.data.labels = labels;
-            this.graphData.data.datasets[0].data = valueIfHolding;
-            this.graphData.data.datasets[1].data = value;
-            this.graphData.data.datasets[2].data = inputs;
+            // this.graphData.data.labels = data.date_labels;
+            this.graphData.data.datasets[0].data = data.worth_if_holding;
+            this.graphData.data.datasets[1].data = data.balance_total_usd;
+            this.graphData.data.datasets[2].data = data.cumulative_inputs;
+
 
             let oldCanvasContainer =  document.getElementById('performance_container');
 
@@ -230,44 +228,22 @@ export default {
         getBalances: function() {
             let _this = this;
 
-            axios.get(this.br, {
+            axios.get(this.balanceRoute, {
                 params: {
                     of: _this.s1,
                 }
             }).then(function (response) {
-                _this.bals1 = response.data;
+                _this.bals1 = parseFloat(response.data.qty).toFixed(2);
+                _this.bals1_usd = parseFloat(response.data.market_value).toFixed(2);
             });
 
-            axios.get(this.br, {
+            axios.get(this.balanceRoute, {
                 params: {
                     of: _this.s2,
                 }
             }).then(function (response) {
-                _this.bals2 = response.data;
-            });
-
-            axios.get('/latestprices', {
-                params: {
-                    s1: _this.s1,
-                    s2: _this.s2,
-                }
-            }).then(function (response) {
-                _this.pricec1Now = response.data['s1'];
-                _this.pricec2Now = response.data['s2'];
-
-                if (response.data['latest_input']) {
-                    _this.latestInput.s1.usd = response.data['latest_input']['amount1_usd'];
-                    _this.latestInput.s1.s1 = response.data['latest_input']['amount1'];
-                    _this.latestInput.s2.usd = response.data['latest_input']['amount2_usd'];
-                    _this.latestInput.s2.s2 = response.data['latest_input']['amount2'];
-                } else {
-                    _this.latestInput.s1.usd = null;
-                    _this.latestInput.s1.s1 = null;
-                    _this.latestInput.s2.usd = null;
-                    _this.latestInput.s2.s2 = null;
-                }
-
-                _this.showNewRecord = true;
+                _this.bals2 = parseFloat(response.data.qty).toFixed(2);
+                _this.bals2_usd = parseFloat(response.data.market_value).toFixed(2);
             });
         },
     },

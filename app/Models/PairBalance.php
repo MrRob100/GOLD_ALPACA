@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class PairBalance extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         's1',
         'balance_s1',
@@ -17,6 +19,4 @@ class PairBalance extends Model
         'balance_s2_usd',
         'price_at_trade_s2',
     ];
-
-    use HasFactory;
 }
