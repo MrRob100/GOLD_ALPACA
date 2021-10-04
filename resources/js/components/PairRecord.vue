@@ -122,6 +122,7 @@ export default {
             bals2_usd: 0,
             pricec1Now: null,
             pricec2Now: null,
+            latest: false,
             latestInput: {
                 s1: {
                     s1: null,
@@ -200,7 +201,9 @@ export default {
             this.graphData.data.datasets[1].data = data.balance_total_usd;
             this.graphData.data.datasets[2].data = data.cumulative_inputs;
 
-
+            this.newChart();
+        },
+        newChart: function() {
             let oldCanvasContainer =  document.getElementById('performance_container');
 
             if (typeof(oldCanvasContainer) != 'undefined' && oldCanvasContainer != null) {
@@ -212,6 +215,26 @@ export default {
             canvasContainer.appendChild(canvas);
 
             new Chart(canvas, this.graphData);
+        },
+        pushLatestToChart: function() {
+            let today = new Date();
+
+            if (this.latest) {
+                let offset = this.graphData.data.datasets[0].data.length - 1;
+
+                this.graphData.data.labels[offset] = today.toISOString().split('T')[0];
+                this.graphData.data.datasets[0].data[offset] = this.valueIfHoldingNow;
+                this.graphData.data.datasets[1].data[offset] = this.totalBalNow;
+                this.graphData.data.datasets[2].data[offset] = this.totalInput;
+            } else {
+                this.graphData.data.labels.push(today.toISOString().split('T')[0]);
+                this.graphData.data.datasets[0].data.push(this.valueIfHoldingNow);
+                this.graphData.data.datasets[1].data.push(this.totalBalNow);
+                this.graphData.data.datasets[2].data.push(this.totalInput);
+            }
+
+            this.newChart();
+            this.latest = true;
         },
         getBalances: function() {
             let _this = this;
@@ -232,6 +255,7 @@ export default {
                 _this.latestInput.s1.s1 = response.data.s1.latest_input.amount;
                 _this.latestInput.s2.usd = response.data.s1.latest_input.amount_usd;
                 _this.latestInput.s2.s2 = response.data.s1.latest_input.amount;
+                _this.pushLatestToChart();
             });
         },
     },
