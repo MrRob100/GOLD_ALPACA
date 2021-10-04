@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Input;
+use App\Models\PairBalance;
 use App\Services\AlpacaService;
 use App\Services\BinanceGetService;
 use App\Services\IEXGetService;
@@ -222,5 +224,53 @@ class ChartController extends Controller
     public function pair(): View
     {
         return view('pair');
+    }
+
+    public function getLatestData(Request $request)
+    {
+        $pair_balance = PairBalance::where(
+            function ($query) use ($request) {
+                $query->where('s1', $request->s1)
+                    ->where('s2', $request->s2);
+            }
+        )->orWhere(
+            function ($query) use ($request) {
+                $query->where('s1', $request->s2)
+                    ->where('s2', $request->s1);
+            }
+        )->orderBy('created_at', 'desc')->first();
+
+        $input = Input::where(
+            function ($query) use ($request) {
+                $query->where('symbol1', $request->s1)
+                    ->where('symbol2', $request->s2);
+            }
+        )->orWhere(
+            function ($query) use ($request) {
+                $query->where('symbol1', $request->s2)
+                    ->where('symbol2', $request->s1);
+            }
+        )->orderBy('created_at', 'desc')->first();
+
+        return [
+            's1' => [
+                'qty' => floatval($this->alpacaService->position($request->s1)['qty']),
+                'value' => floatval($this->alpacaService->position($request->s1)['market_value']),
+                'price' => $this->alpacaService->price($request->s1),
+                'latest_input' => [
+                    'amount' => $input->created_at > $pair_balance->created_at ? $input['amount1'] : null,
+                    'amount_usd' => $input->created_at > $pair_balance->created_at ? $input['amount1_usd'] : null,
+                ]
+            ],
+            's2' => [
+                'qty' => floatval($this->alpacaService->position($request->s2)['qty']),
+                'value' => floatval($this->alpacaService->position($request->s2)['market_value']),
+                'price' => $this->alpacaService->price($request->s2),
+                'latest_input' => [
+                    'amount' => $input->created_at > $pair_balance->created_at ? $input['amount1'] : null,
+                    'amount_usd' => $input->created_at > $pair_balance->created_at ? $input['amount1_usd'] : null,
+                ]
+            ]
+        ];
     }
 }

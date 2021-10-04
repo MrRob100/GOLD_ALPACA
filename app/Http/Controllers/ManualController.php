@@ -135,6 +135,8 @@ class ManualController extends Controller
                     $merged = array_merge($pair_balance->toArray(), [
                         'balance_total_usd' => $pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd,
                         'worth_if_holding' => ($relInputs->sum('amount1') * $pair_balance->price_at_trade_s1) + ($relInputs->sum('amount2') * $pair_balance->price_at_trade_s2),
+                        'input_s1' => $relInputs->sum('amount1'),
+                        'input_s2' => $relInputs->sum('amount2'),
                         'total_input_usd' => $relInputs->sum('amount1_usd') + $relInputs->sum('amount2_usd'),
                         'profit_usd' => $pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd - $relInputs->sum('amount1_usd') + $relInputs->sum('amount2_usd'),
                         'delta_worth_and_worth_if_holding_usd' => ($pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd) - ($relInputs->sum('amount1') * $pair_balance->price_at_trade_s1) + ($relInputs->sum('amount2') * $pair_balance->price_at_trade_s2),
@@ -208,4 +210,5 @@ class ManualController extends Controller
     public function balance(Request $request)
     {
         return $this->alpacaService->position($request->of);
-    }}
+    }
+}

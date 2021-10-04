@@ -77,6 +77,7 @@
             >
             </controls>
             <pair-record
+                :latest-data-route="latestDataRoute"
                 :balance-route="balanceRoute"
                 :value="value"
                 :push-lasts="pushLasts">
@@ -103,7 +104,8 @@ export default {
         "dlr",
         "bdr",
         "rand",
-        'market-open-route',
+        "market-open-route",
+        "latest-data-route",
     ],
 
     components: {

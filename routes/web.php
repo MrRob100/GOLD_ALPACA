@@ -73,3 +73,6 @@ Route::get('/price', [ManualController::class, 'price'])->name('price');
 
 /* check if market open */
 Route::get('/open', [ManualController::class, 'open'])->name('open');
+
+/* latest data */
+Route::get('/latest_data', [ChartController::class, 'getLatestData'])->name('latest-data');

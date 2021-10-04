@@ -39,7 +39,7 @@
                     <th class="text-center">{{ s2 }}</th>
                     <th class="text-center">$</th>
                     <th class="text-center">$</th>
-                    <th class="text-center">Δ</th>
+                    <th class="text-center">Δh</th>
                     <th class="text-center">Δi</th>
                     <th class="text-center">$</th>
                     <th class="text-center">$</th>
@@ -76,31 +76,19 @@
                 </tr>
                 <tr v-if="bals1 !== 0 && bals1_usd !== 0 && bals2 !== 0 && bals2_usd !== 0">
                     <td>{{ formatDate(new Date()) }}</td>
-<!--                    <td>{{ bals1.toFixed(2) }}</td>-->
-<!--                    <td>{{ bals1_usd.toFixed(2) }}</td>-->
-<!--                    <td>{{ bals2.toFixed(2) }}</td>-->
-<!--                    <td>{{ bals2_usd.toFixed(2) }}</td>-->
-                    <td>{{ bals1 }}</td>
-                    <td>{{ bals1_usd }}</td>
-                    <td>{{ bals2 }}</td>
-                    <td>{{ bals2_usd }}</td>
-                    <td class="bg-info text-light">{{ parseFloat(bals1_usd + bals2_usd).toFixed(2) }}</td>
-<!--                    <td class="bg-info text-light">{{ (bals1_usd + bals2_usd).toFixed(2) }}</td>-->
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-<!--                    <td class="text-light"-->
-<!--                        :class="(((bals1 * pricec1Now) + (bals2 * pricec2Now)) - ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now)) > 0 ? 'bg-success' : 'bg-danger'"-->
-<!--                    >-->
-<!--                        {{ (((bals1 * pricec1Now) + (bals2 * pricec2Now)) - ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now)).toFixed(2) }}-->
-<!--                    </td>-->
-<!--                    <td :class="((bals1 * pricec1Now) + (bals2 * pricec2Now)) - (this.totalInput) > 0 ? 'bg-success' : 'bg-danger'"-->
-<!--                    >-->
-<!--                        {{ (((bals1 * pricec1Now) + (bals2 * pricec2Now)) - (this.totalInput)).toFixed(2) }}-->
-<!--                    </td>-->
-<!--                    <td class="bg-dark text-light">{{ ((this.latestRecord.input_symbol1 + this.latestInput.s1.s1) * pricec1Now + (this.latestRecord.input_symbol2 + this.latestInput.s2.s2) * pricec2Now).toFixed(2) }}</td>-->
-<!--                    <td class="bg-secondary text-light">{{ (this.totalInput).toFixed(2) }}</td>-->
+                    <td>{{ bals1.toFixed(2) }}</td>
+                    <td>{{ bals1_usd.toFixed(2) }}</td>
+                    <td>{{ bals2.toFixed(2) }}</td>
+                    <td>{{ bals2_usd.toFixed(2) }}</td>
+                    <td class="bg-info text-light">{{ totalBalNow }}</td>
+                    <td class="text-light" :class="(totalBalNow - valueIfHoldingNow) > 0 ? 'bg-success' : 'bg-danger'">
+                        {{ (totalBalNow - valueIfHoldingNow).toFixed(2) }}
+                    </td>
+                    <td class="text-light" :class="(totalBalNow - totalInput) > 0 ? 'bg-success' : 'bg-danger'">
+                        {{ (totalBalNow - totalInput).toFixed(2) }}
+                    </td>
+                    <td class="bg-dark text-light">{{ valueIfHoldingNow }}</td>
+                    <td class="bg-secondary text-light">{{ totalInput }}</td>
                 </tr>
                 </tbody>
             </table>
@@ -117,7 +105,8 @@ export default {
     props: [
         "value",
         "push-lasts",
-        "balance-route"
+        "balance-route",
+        "latest-data-route",
     ],
     data: function() {
         return {
@@ -207,7 +196,6 @@ export default {
             });
 
             this.graphData.data.labels = labels;
-            // this.graphData.data.labels = data.date_labels;
             this.graphData.data.datasets[0].data = data.worth_if_holding;
             this.graphData.data.datasets[1].data = data.balance_total_usd;
             this.graphData.data.datasets[2].data = data.cumulative_inputs;
@@ -228,26 +216,29 @@ export default {
         getBalances: function() {
             let _this = this;
 
-            axios.get(this.balanceRoute, {
+            axios.get(this.latestDataRoute, {
                 params: {
-                    of: _this.s1,
+                    s1: this.s1,
+                    s2: this.s2,
                 }
             }).then(function (response) {
-                _this.bals1 = parseFloat(response.data.qty).toFixed(2);
-                _this.bals1_usd = parseFloat(response.data.market_value).toFixed(2);
-            });
-
-            axios.get(this.balanceRoute, {
-                params: {
-                    of: _this.s2,
-                }
-            }).then(function (response) {
-                _this.bals2 = parseFloat(response.data.qty).toFixed(2);
-                _this.bals2_usd = parseFloat(response.data.market_value).toFixed(2);
+                _this.bals1 = response.data.s1.qty;
+                _this.bals1_usd = response.data.s1.value;
+                _this.bals2 = response.data.s2.qty;
+                _this.bals2_usd = response.data.s2.value;
+                _this.pricec1Now = response.data.s1.price;
+                _this.pricec2Now = response.data.s2.price;
+                _this.latestInput.s1.usd = response.data.s1.latest_input.amount_usd;
+                _this.latestInput.s1.s1 = response.data.s1.latest_input.amount;
+                _this.latestInput.s2.usd = response.data.s1.latest_input.amount_usd;
+                _this.latestInput.s2.s2 = response.data.s1.latest_input.amount;
             });
         },
     },
     computed: {
+        totalBalNow: function() {
+            return (this.bals1_usd + this.bals2_usd).toFixed(2);
+        },
         latestRecord: function() {
             return Object.values(this.data.records)[Object.keys(this.data.records).length - 1];
         },
@@ -255,8 +246,11 @@ export default {
             return this.latestInput.s1.usd + this.latestInput.s2.usd;
         },
         totalInput: function() {
-            return this.latestRecord.input_symbol1_usd + this.latestRecord.input_symbol2_usd + this.latestInputTotal;
+            return (this.latestRecord.total_input_usd + this.latestInputTotal).toFixed(2);
         },
+        valueIfHoldingNow: function() {
+            return (((this.latestRecord.input_s1 + this.latestInput.s1.s1) * this.pricec1Now) + ((this.latestRecord.input_s2 + this.latestInput.s2.s2) * this.pricec2Now)).toFixed(2);
+        }
     },
     watch: {
         value: function(val) {

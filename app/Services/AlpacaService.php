@@ -13,13 +13,13 @@ class AlpacaService {
     protected string $secret;
 
     public function __construct() {
-        $this->endpoint = env('ALPACA_ENDPOINT_PAPER');
-        $this->key = env('ALPACA_KEY_PAPER');
-        $this->secret = env('ALPACA_SECRET_PAPER');
+//        $this->endpoint = env('ALPACA_ENDPOINT_PAPER');
+//        $this->key = env('ALPACA_KEY_PAPER');
+//        $this->secret = env('ALPACA_SECRET_PAPER');
 
-//        $this->endpoint = env('ALPACA_ENDPOINT');
-//        $this->key = env('ALPACA_KEY');
-//        $this->secret = env('ALPACA_SECRET');
+        $this->endpoint = env('ALPACA_ENDPOINT');
+        $this->key = env('ALPACA_KEY');
+        $this->secret = env('ALPACA_SECRET');
     }
 
     public function barsCall(string $symbol, string $end)
@@ -124,9 +124,10 @@ class AlpacaService {
             ];
         }
 
-        $position_to = $this->position($from);
+        $position_from = $this->position($from);
+        $position_to = $this->position($to);
 
-        $price_from = $this->price($to);
+        $price_from = $this->price($from);
         $price_to = $this->price($to);
 
         $asset_value_from = $position_from['qty'] * $position_from['current_price'];

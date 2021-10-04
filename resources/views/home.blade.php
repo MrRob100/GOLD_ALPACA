@@ -14,6 +14,7 @@
         bdr="{{ route('brecord') }}"
         rand="{{ route('randomize') }}"
         market-open-route="{{ route('open') }}"
+        latest-data-route="{{ route('latest-data') }}"
     >
     </pair-page>
 @endsection
