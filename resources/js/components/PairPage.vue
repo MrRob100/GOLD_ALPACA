@@ -6,7 +6,7 @@
                 <small v-else style="color: red">Market closed</small>
                 <multiselect
                     v-model="marketType"
-                    :options="['binance', 'oil', 'metals', 'others', 'iex', 'alpaca']"
+                    :options="['binance', 'oil', 'metals', 'others', 'alpaca']"
                     :multiple="false"
                 ></multiselect>
                 <br>
@@ -19,18 +19,12 @@
                     <button @click="add" class="btn btn-success"><i class="fa fa-plus"></i></button>
                 </div>
 
-                <div v-if="marketType === 'iex'">
-                    <div class="form-group">
-                        <input type="text" v-model="v1" class="form-control mb-1">
-                        <input type="text" v-model="v2" class="form-control">
-                    </div>
-                    <button @click="go" class="btn btn-success">Go</button>
-                </div>
-
                 <div v-if="marketType === 'alpaca'">
                     <div class="form-group">
-                        <input type="text" v-model="v1" class="form-control mb-1">
-                        <input type="text" v-model="v2" class="form-control">
+                        <input type="text" :value="v1.toUpperCase()" @input="v1 = $event.target.value.toUpperCase()" class="form-control mb-1">
+                        <input type="text" :value="v2.toUpperCase()" @input="v2 = $event.target.value.toUpperCase()" class="form-control">
+<!--                        <input type="text" v-model="v1" class="form-control mb-1">-->
+<!--                        <input type="text" v-model="v2" class="form-control">-->
                     </div>
                     <button @click="go" class="btn btn-success">Go</button>
                     <button @click="add" class="btn btn-success"><i class="fa fa-plus"></i></button>

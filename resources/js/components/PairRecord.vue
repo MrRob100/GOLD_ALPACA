@@ -84,7 +84,7 @@
                     <td class="text-light" :class="(totalBalNow - valueIfHoldingNow) > 0 ? 'bg-success' : 'bg-danger'">
                         {{ (totalBalNow - valueIfHoldingNow).toFixed(2) }}
                     </td>
-                    <td class="text-light" :class="(totalBalNow - totalInput) > 0 ? 'bg-success' : 'bg-danger'">
+                    <td :class="(totalBalNow - totalInput) > 0 ? 'bg-success' : 'bg-danger'">
                         {{ (totalBalNow - totalInput).toFixed(2) }}
                     </td>
                     <td class="bg-dark text-light">{{ valueIfHoldingNow }}</td>
