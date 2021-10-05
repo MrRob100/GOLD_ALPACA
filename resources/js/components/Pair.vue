@@ -11,7 +11,8 @@
             ></trading-vue>
         </div>
         <div class="col-4">
-            <trading-vue
+            <trading-vuea
+                :colorWickUp="lineDataPair ? JSON.stringify(lineDataPair) : null"
                 :indexBased="true"
                 style="z-index: -1"
                 colorText="#7DA0B1"
@@ -19,7 +20,7 @@
                 :overlays="overlays"
                 :height="280"
                 :width="460"
-            ></trading-vue>
+            ></trading-vuea>
         </div>
         <div class="col-4">
             <trading-vue
@@ -37,11 +38,13 @@
 
 import { TradingVue, DataCube } from 'trading-vue-js';
 import Overlays from 'tvjs-overlays';
+import TradingVuea from '../../js/trading-vue-a-2';
 
     export default {
 
         components: {
             TradingVue,
+            TradingVuea,
         },
 
         props: {
@@ -86,6 +89,7 @@ import Overlays from 'tvjs-overlays';
                     },
                 }),
                 overlays: [Overlays['EMA']],
+                lineDataPair: [],
             }
         },
 
@@ -102,6 +106,8 @@ import Overlays from 'tvjs-overlays';
                     this.tradingVueData.data.chart.data = response.data['pair'];
                     this.tradingVueData.data.onchart.data = response.data['pair'];
                     this.tradingVue2.data.chart.data = response.data['second'];
+
+                    this.lineDataPair = response.data['events'];
 
                     let lasts = [
                         {"s1": response.data['first'][response.data['first'].length - 1][4]},
