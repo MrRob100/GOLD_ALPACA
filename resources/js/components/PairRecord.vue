@@ -74,7 +74,7 @@
                     <td></td>
                     <td></td>
                 </tr>
-                <tr v-if="bals1 !== 0 && bals1_usd !== 0 && bals2 !== 0 && bals2_usd !== 0">
+                <tr v-if="bals1 !== 0 && bals1_usd !== 0 && bals2 !== 0 && bals2_usd !== 0 && showLatestRow">
                     <td>{{ formatDate(new Date()) }}</td>
                     <td>{{ bals1.toFixed(2) }}</td>
                     <td>{{ bals1_usd.toFixed(2) }}</td>
@@ -123,6 +123,7 @@ export default {
             pricec1Now: null,
             pricec2Now: null,
             latest: false,
+            showLatestRow: false,
             latestInput: {
                 s1: {
                     s1: null,
@@ -233,11 +234,13 @@ export default {
                 this.graphData.data.datasets[2].data.push(this.totalInput);
             }
 
+
             this.newChart();
             this.latest = true;
         },
         getBalances: function() {
             let _this = this;
+            _this.showLatestRow = true;
 
             axios.get(this.latestDataRoute, {
                 params: {
@@ -286,6 +289,14 @@ export default {
         pushLasts: function(val) {
             this.pricec1 = val[0].s1;
             this.pricec2 = val[1].s2;
+        },
+        s1: function() {
+            this.showLatestRow = false;
+            this.latest = false;
+        },
+        s2: function() {
+            this.showLatestRow = false;
+            this.latest = false;
         }
     }
 }
