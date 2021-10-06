@@ -162,6 +162,15 @@ class AlpacaService {
 
         sleep(1.5);
 
+//        dd($sell);
+
+//        handle
+
+//        {#312
+//            +"code": 40310100
+//            +"message": "trade denied due to pattern day trading protection"
+//        }
+
         $sale_value_from = $sell->qty * $position_from['current_price'];
 
         //delay logic?

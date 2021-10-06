@@ -20,8 +20,9 @@ import Vue from 'vue';
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('order', require('./components/Order.vue').default);
 Vue.component('pair', require('./components/Pair.vue').default);
+Vue.component('order', require('./components/Order.vue').default);
+Vue.component('activity', require('./components/Activity.vue').default);
 Vue.component('pair-page', require('./components/PairPage.vue').default);
 Vue.component('list', require('./components/List.vue').default);
 Vue.component('record', require('./components/Record.vue').default);

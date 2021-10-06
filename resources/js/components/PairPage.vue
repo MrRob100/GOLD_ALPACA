@@ -43,13 +43,16 @@
                     ></multiselect>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-6">
                 <list
                     @populate="populate"
                     :spr="spr"
                     :added="added"
                     :dlr="dlr"
                 ></list>
+            </div>
+            <div class="col-md-3">
+                <activity></activity>
             </div>
         </div>
         <pair
