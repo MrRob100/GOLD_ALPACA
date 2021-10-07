@@ -138,8 +138,6 @@ class ManualController extends Controller
                         'input_s1' => $relInputs->sum('amount1'),
                         'input_s2' => $relInputs->sum('amount2'),
                         'total_input_usd' => $relInputs->sum('amount1_usd') + $relInputs->sum('amount2_usd'),
-                        'profit_usd' => $pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd - $relInputs->sum('amount1_usd') + $relInputs->sum('amount2_usd'),
-                        'delta_worth_and_worth_if_holding_usd' => ($pair_balance->balance_s1_usd + $pair_balance->balance_s2_usd) - ($relInputs->sum('amount1') * $pair_balance->price_at_trade_s1) + ($relInputs->sum('amount2') * $pair_balance->price_at_trade_s2),
                     ]);
 
                     $data[] = $merged;

@@ -54,11 +54,12 @@
                     <td>{{ parseFloat(item.balance_s2_usd).toFixed(2) }}</td>
                     <td class="bg-info text-light">{{ (item.balance_total_usd).toFixed(2) }}</td>
 
-                    <td class="text-light" :class="item.delta_worth_and_worth_if_holding_usd > 0 ? 'bg-success' : 'bg-danger'"
-                    >{{ item.delta_worth_and_worth_if_holding_usd.toFixed(2) }}</td>
+                    <td class="text-light" :class="item.balance_total_usd - item.worth_if_holding > 0 ? 'bg-success' : 'bg-danger'"
+                    >{{ (item.balance_total_usd - item.worth_if_holding).toFixed(2) }}</td>
 
-                    <td :class="item.profit_usd > 0 ? 'bg-success' : 'bg-danger'"
-                    >{{ item.profit_usd.toFixed(2) }}</td>
+                    <td :class="item.balance_total_usd - item.total_input_usd > 0 ? 'bg-success' : 'bg-danger'"
+                    >{{ (item.balance_total_usd - item.total_input_usd).toFixed(2) }}</td>
+
                     <td class="bg-dark text-light">{{ item.worth_if_holding.toFixed(2) }}</td>
                     <td class="bg-secondary text-light">{{ item.total_input_usd.toFixed(2) }}</td>
                 </tr>
@@ -233,7 +234,6 @@ export default {
                 this.graphData.data.datasets[1].data.push(this.totalBalNow);
                 this.graphData.data.datasets[2].data.push(this.totalInput);
             }
-
 
             this.newChart();
             this.latest = true;

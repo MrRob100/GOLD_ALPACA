@@ -18,5 +18,6 @@ class PairBalance extends Model
         'balance_s2',
         'balance_s2_usd',
         'price_at_trade_s2',
+        'note',
     ];
 }

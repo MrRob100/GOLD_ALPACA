@@ -14,7 +14,7 @@ class AddTradeNoteToPairBalancesTable extends Migration
     public function up()
     {
         Schema::table('pair_balances', function (Blueprint $table) {
-            //
+            $table->string('note');
         });
     }
 
@@ -26,7 +26,7 @@ class AddTradeNoteToPairBalancesTable extends Migration
     public function down()
     {
         Schema::table('pair_balances', function (Blueprint $table) {
-            //
+            $table->dropColumn('note');
         });
     }
 }
