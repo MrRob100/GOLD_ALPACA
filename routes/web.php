@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CronController;
 use App\Http\Controllers\HomeController;
@@ -76,3 +77,5 @@ Route::get('/open', [ManualController::class, 'open'])->name('open');
 
 /* latest data */
 Route::get('/latest_data', [ChartController::class, 'getLatestData'])->name('latest-data');
+
+Route::get('/latest_activity', [ActivityController::class, 'getActivity']);

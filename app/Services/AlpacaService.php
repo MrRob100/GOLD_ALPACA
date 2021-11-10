@@ -126,7 +126,6 @@ class AlpacaService {
         }
 
         $position_from = $this->position($from);
-        $position_to = $this->position($to);
 
         $price_to = $this->price($to);
 
@@ -156,6 +155,7 @@ class AlpacaService {
             'balance_s2' => round($this->position($pair->s2)['qty'], 2),
             'balance_s2_usd' => round($this->position($pair->s2)['market_value'], 2),
             'price_at_trade_s2' => round($this->price($pair->s2), 2),
+            'note' => "sell $from, buy $to",
         ]);
 
         $sell = $this->createMarketOrder('sell', $position_from['qty'] / $portion, $from);

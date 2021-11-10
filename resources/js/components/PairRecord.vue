@@ -256,8 +256,8 @@ export default {
                 _this.pricec2Now = response.data.s2.price;
                 _this.latestInput.s1.usd = response.data.s1.latest_input.amount_usd;
                 _this.latestInput.s1.s1 = response.data.s1.latest_input.amount;
-                _this.latestInput.s2.usd = response.data.s1.latest_input.amount_usd;
-                _this.latestInput.s2.s2 = response.data.s1.latest_input.amount;
+                _this.latestInput.s2.usd = response.data.s2.latest_input.amount_usd;
+                _this.latestInput.s2.s2 = response.data.s2.latest_input.amount;
                 _this.pushLatestToChart();
             });
         },

@@ -2,15 +2,12 @@
     <div>
         <small>Today's activity:</small>
         <ul>
-            <li v-for="item in activity">
+            <li v-for="(item, date) in dayTrades">{{ date }}: {{ item }}</li>
 
-            </li>
         </ul>
         <small>Day trades in last 5 days:</small>
-        <ul>
-            <li v-for="item in dayTrades">
-
-            </li>
+        <ul class="activity-list">
+            <li v-for="(item, date) in activity">{{ date }}: {{ item }}</li>
         </ul>
     </div>
 </template>
@@ -30,9 +27,18 @@ export default {
 
     methods: {
         getData: function() {
-            //axios
+            axios.get('/latest_activity').then(response => {
+                this.activity = response.data.last_5_days;
+                this.dayTrades = response.data.today;
+            });
         },
     },
 }
 
 </script>
+<style>
+    .activity-list {
+        height: 100px;
+        overflow-y: scroll;
+    }
+</style>
