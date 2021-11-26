@@ -112,8 +112,8 @@ class ChartController extends Controller
                 'value' => floatval($this->alpacaService->position($request->s2)['market_value']),
                 'price' => $this->alpacaService->price($request->s2),
                 'latest_input' => [
-                    'amount' => $input->created_at > $pair_balance->created_at ? $input['amount1'] : null,
-                    'amount_usd' => $input->created_at > $pair_balance->created_at ? $input['amount1_usd'] : null,
+                    'amount' => $input->created_at > $pair_balance->created_at ? $input['amount2'] : null,
+                    'amount_usd' => $input->created_at > $pair_balance->created_at ? $input['amount2_usd'] : null,
                 ]
             ]
         ];
