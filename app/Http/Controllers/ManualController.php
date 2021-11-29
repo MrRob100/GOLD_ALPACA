@@ -86,17 +86,8 @@ class ManualController extends Controller
         $startDate = Carbon::createFromDate($year, $month, 1);
         $endDate = Carbon::createFromDate($year, $month, 1)->addMonth();
 
-        $query = PairBalance::where(
-            function ($query) use ($request) {
-                $query->where('s1', $request->s1)
-                    ->where('s2', $request->s2);
-            }
-        )->orWhere(
-            function ($query) use ($request) {
-                $query->where('s1', $request->s2)
-                    ->where('s2', $request->s1);
-            }
-        );
+        $query = PairBalance::where('s1', $request->s1)
+            ->where('s2', $request->s2);
 
         if ($month) {
             $query = $query->whereBetween('created_at', [$startDate, $endDate]);
