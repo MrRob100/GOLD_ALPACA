@@ -97,10 +97,13 @@ class ChartController extends Controller
             }
         )->orderBy('created_at', 'desc')->first();
 
+        $position1 = $this->alpacaService->position($request->s1);
+        $position2 = $this->alpacaService->position($request->s2);
+
         return [
             's1' => [
-                'qty' => floatval($this->alpacaService->position($request->s1)['qty']),
-                'value' => floatval($this->alpacaService->position($request->s1)['market_value']),
+                'qty' => $position1 ? floatval($position1['qty']) : 0.00001,
+                'value' => $position1 ? floatval($position1['market_value']) : 0.00001,
                 'price' => $this->alpacaService->price($request->s1),
                 'latest_input' => [
                     'amount' => $input->created_at > $pair_balance->created_at ? $input['amount1'] : null,
@@ -108,8 +111,8 @@ class ChartController extends Controller
                 ]
             ],
             's2' => [
-                'qty' => floatval($this->alpacaService->position($request->s2)['qty']),
-                'value' => floatval($this->alpacaService->position($request->s2)['market_value']),
+                'qty' => $position2 ? floatval($position2['qty']) : 0.00001,
+                'value' => $position2 ? floatval($position2['market_value']) : 0.00001,
                 'price' => $this->alpacaService->price($request->s2),
                 'latest_input' => [
                     'amount' => $input->created_at > $pair_balance->created_at ? $input['amount2'] : null,
